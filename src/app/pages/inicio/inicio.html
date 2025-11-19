@@ -1,0 +1,144 @@
+<!-- src/app/pages/inicio/inicio.html -->
+<section class="inicio-layout">
+  <aside class="inicio__categorias">
+    <h2 class="inicio__titulo">Mis categorías</h2>
+    <ul class="categorias__lista">
+      <li>Resistencias</li>
+      <li>Condensadores</li>
+      <li>Interruptores</li>
+      <li>Amplificadores de audio</li>
+      <li>Fuentes conmutadas</li>
+      <li>Transistores y MOSFET</li>
+      <li>Diodos y rectificadores</li>
+      <li>Microcontroladores y Arduino</li>
+      <li>Balanceadores y BMS</li>
+      <li>Ver todo el catálogo</li>
+    </ul>
+  </aside>
+
+  <section class="inicio__principal">
+    <div class="banner-electronica">
+      <div class="banner__texto">
+        <h1>Componentes electrónicos para tus proyectos - Promo Navidad</h1>
+        <p>
+          Desde resistencias hasta microcontroladores. Todo lo que necesitas para tus montajes,
+          prototipos y reparaciones.
+        </p>
+        <button class="banner__btn">Ver ofertas destacadas</button>
+      </div>
+      <div class="banner__imagen">
+
+        
+        <!--aqui luego pondremos una imagen de PCBs o componentes -->
+      </div>
+    </div>
+
+    <section class="inicio__ofertas">
+      <h2>Productos destacados</h2>
+
+      <p *ngIf="cargando">Cargando productos...</p>
+      <p class="error-msg" *ngIf="error">{{ error }}</p>
+
+      <div class="ofertas__grid" *ngIf="!cargando && !error && productos.length > 0">
+        <article class="oferta-card" *ngFor="let p of productos" (click)="verDetalle(p)">
+          <div class="oferta-card__imagen" *ngIf="p.imagenUrl; else sinImagen">
+            <img [src]="p.imagenUrl" [alt]="p.nombre" />
+          </div>
+          <ng-template #sinImagen>
+            <div class="oferta-card__imagen oferta-card__imagen--placeholder">
+              <span>Sin imagen</span>
+            </div>
+          </ng-template>
+
+          <div class="oferta-card__contenido">
+            <div class="oferta-card__header">
+              <h3>{{ p.nombre }}</h3>
+              <span class="oferta-card__precio">
+                S/ {{ p.precio | number : '1.2-2' }}
+              </span>
+            </div>
+
+            <p class="oferta-card__categoria" *ngIf="p.categoria">
+              {{ p.categoria.nombre }}
+            </p>
+
+            <p class="oferta-card__descripcion">
+              {{ p.descripcion }}
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <p *ngIf="!cargando && !error && productos.length === 0">
+        No hay productos activos disponibles en este momento.
+      </p>
+    </section>
+
+    <!-- MODAL DETALLE PRODUCTO -->
+    <div class="modal-overlay" *ngIf="mostrandoModal" (click)="cerrarModal()">
+      <div class="modal-contenido producto-modal" (click)="$event.stopPropagation()">
+        <button class="modal-cerrar" type="button" (click)="cerrarModal()">✕</button>
+
+        <div class="producto-modal__layout" *ngIf="productoSeleccionado as p">
+          <div class="producto-modal__imagen">
+            <img *ngIf="p.imagenUrl; else sinImagenDetalle" [src]="p.imagenUrl" [alt]="p.nombre" />
+            <ng-template #sinImagenDetalle>
+              <div class="producto-modal__placeholder">Sin imagen</div>
+            </ng-template>
+          </div>
+
+          <div class="producto-modal__info">
+            <h2>{{ p.nombre }}</h2>
+
+            <p class="producto-modal__categoria" *ngIf="p.categoria">
+              {{ p.categoria.nombre }}
+            </p>
+
+            <p class="producto-modal__descripcion">
+              {{ p.descripcion }}
+            </p>
+
+            <div class="producto-modal__precio">
+              Precio:
+              <strong>S/ {{ p.precio | number : '1.2-2' }}</strong>
+            </div>
+
+            <!-- ⚠️ Avisos de stock -->
+            <p *ngIf="stockBajo" class="stock-warning mt-1">
+              ¡Quedan pocas unidades! Stock disponible: {{ p.stock }}
+            </p>
+
+            <p *ngIf="sinStock" class="stock-error mt-1">
+              Producto sin stock actualmente.
+            </p>
+
+            <div class="producto-modal__acciones">
+              <label>
+                Cantidad:
+                <input
+                  type="number"
+                  min="1"
+                  [max]="p.stock || 1"
+                  [(ngModel)]="cantidadSeleccionada"
+                  [disabled]="sinStock"
+                />
+              </label>
+
+              <button
+                type="button"
+                class="btn-principal"
+                (click)="agregarAlCarrito()"
+                [disabled]="sinStock"
+              >
+                Agregar al carrito
+              </button>
+            </div>
+
+            <div class="form-error" *ngIf="errorCarrito">{{ errorCarrito }}</div>
+            <div class="form-ok" *ngIf="mensajeCarrito">{{ mensajeCarrito }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
