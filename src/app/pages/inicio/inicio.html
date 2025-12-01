@@ -3,23 +3,27 @@
   <aside class="inicio__categorias">
     <h2 class="inicio__titulo">Mis categorías</h2>
     <ul class="categorias__lista">
-      <li>Resistencias</li>
-      <li>Condensadores</li>
-      <li>Interruptores</li>
-      <li>Amplificadores de audio</li>
-      <li>Fuentes conmutadas</li>
-      <li>Transistores y MOSFET</li>
-      <li>Diodos y rectificadores</li>
-      <li>Microcontroladores y Arduino</li>
-      <li>Balanceadores y BMS</li>
-      <li>Ver todo el catálogo</li>
+      <!-- Ver todo -->
+      <li
+        (click)="seleccionarCategoria(null)"
+        [class.categoria-activa]="!categoriaSeleccionada">
+        Ver todo el catálogo
+      </li>
+
+      <!-- 🔹 Categorías dinámicas desde el backend -->
+      <li
+        *ngFor="let cat of categorias"
+        (click)="seleccionarCategoria(cat)"
+        [class.categoria-activa]="categoriaSeleccionada === cat">
+        {{ cat }}
+      </li>
     </ul>
   </aside>
 
   <section class="inicio__principal">
     <div class="banner-electronica">
       <div class="banner__texto">
-        <h1>Componentes electrónicos para tus proyectos - Promo Navidad</h1>
+        <h1>Componentes electrónicos para tus proyectos</h1>
         <p>
           Desde resistencias hasta microcontroladores. Todo lo que necesitas para tus montajes,
           prototipos y reparaciones.
@@ -27,9 +31,7 @@
         <button class="banner__btn">Ver ofertas destacadas</button>
       </div>
       <div class="banner__imagen">
-
-        
-        <!--aqui luego pondremos una imagen de PCBs o componentes -->
+        <!-- aquí luego pondremos una imagen de PCBs o componentes -->
       </div>
     </div>
 
@@ -37,10 +39,15 @@
       <h2>Productos destacados</h2>
 
       <p *ngIf="cargando">Cargando productos...</p>
-      <p class="error-msg" *ngIf="error">{{ error }}</p>
 
-      <div class="ofertas__grid" *ngIf="!cargando && !error && productos.length > 0">
-        <article class="oferta-card" *ngFor="let p of productos" (click)="verDetalle(p)">
+      <!-- Listado de productos filtrados -->
+      <div
+        class="ofertas__grid"
+        *ngIf="!cargando && productosFiltrados.length > 0">
+        <article
+          class="oferta-card"
+          *ngFor="let p of productosFiltrados"
+          (click)="verDetalle(p)">
           <div class="oferta-card__imagen" *ngIf="p.imagenUrl; else sinImagen">
             <img [src]="p.imagenUrl" [alt]="p.nombre" />
           </div>
@@ -69,8 +76,8 @@
         </article>
       </div>
 
-      <p *ngIf="!cargando && !error && productos.length === 0">
-        No hay productos activos disponibles en este momento.
+      <p *ngIf="!cargando && productosFiltrados.length === 0">
+        No hay productos que coincidan con los filtros seleccionados.
       </p>
     </section>
 
@@ -103,7 +110,7 @@
               <strong>S/ {{ p.precio | number : '1.2-2' }}</strong>
             </div>
 
-            <!-- ⚠️ Avisos de stock -->
+            <!-- Avisos de stock -->
             <p *ngIf="stockBajo" class="stock-warning mt-1">
               ¡Quedan pocas unidades! Stock disponible: {{ p.stock }}
             </p>
@@ -120,16 +127,14 @@
                   min="1"
                   [max]="p.stock || 1"
                   [(ngModel)]="cantidadSeleccionada"
-                  [disabled]="sinStock"
-                />
+                  [disabled]="sinStock" />
               </label>
 
               <button
                 type="button"
                 class="btn-principal"
                 (click)="agregarAlCarrito()"
-                [disabled]="sinStock"
-              >
+                [disabled]="sinStock">
                 Agregar al carrito
               </button>
             </div>

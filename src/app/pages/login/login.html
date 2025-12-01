@@ -1,0 +1,97 @@
+<section class="login-page">
+  <!-- Tarjeta de login centrada -->
+  <div class="login-card">
+    <h1 class="login-titulo">Iniciar sesión</h1>
+    <p class="login-subtitulo">
+      Accede a Electrónica Franko con tu cuenta para continuar comprando.
+    </p>
+
+    <form [formGroup]="formLogin" (ngSubmit)="onSubmitLogin()" novalidate>
+      <div class="form-grupo">
+        <label for="login-username">Usuario</label>
+        <input
+          id="login-username"
+          type="text"
+          formControlName="username"
+          placeholder="Ej: rub"
+        />
+      </div>
+
+      <div class="form-grupo">
+        <label for="login-password">Contraseña</label>
+        <input
+          id="login-password"
+          type="password"
+          formControlName="password"
+          placeholder="Contraseña"
+        />
+      </div>
+
+      <div class="form-error" *ngIf="errorLogin">{{ errorLogin }}</div>
+
+      <button type="submit" class="btn-principal" [disabled]="cargandoLogin">
+        {{ cargandoLogin ? 'Ingresando...' : 'Iniciar sesión' }}
+      </button>
+    </form>
+
+    <div class="login-separador">
+      <span>¿Eres nuevo en Electrónica Franko?</span>
+      <button type="button" class="btn-link" (click)="abrirRegistro()">
+        Crear una cuenta
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de registro -->
+  <div class="modal-overlay" *ngIf="mostrandoRegistro" (click)="cerrarRegistro()">
+    <div class="modal-contenido" (click)="$event.stopPropagation()">
+      <button class="modal-cerrar" type="button" (click)="cerrarRegistro()">
+        ✕
+      </button>
+
+      <h2>Crear nueva cuenta</h2>
+      <p class="login-subtitulo">
+        Regístrate para guardar tus carritos, pedidos y direcciones.
+      </p>
+
+      <form [formGroup]="formRegistro" (ngSubmit)="onSubmitRegistro()" novalidate>
+        <div class="form-grupo">
+          <label for="reg-username">Usuario</label>
+          <input
+            id="reg-username"
+            type="text"
+            formControlName="username"
+            placeholder="Nombre de usuario"
+          />
+        </div>
+
+        <div class="form-grupo">
+          <label for="reg-email">Correo electrónico</label>
+          <input
+            id="reg-email"
+            type="email"
+            formControlName="email"
+            placeholder="correo@ejemplo.com"
+          />
+        </div>
+
+        <div class="form-grupo">
+          <label for="reg-password">Contraseña</label>
+          <input
+            id="reg-password"
+            type="password"
+            formControlName="password"
+            placeholder="Mínimo 4 caracteres"
+          />
+        </div>
+
+        <div class="form-error" *ngIf="errorRegistro">{{ errorRegistro }}</div>
+        <div class="form-ok" *ngIf="mensajeRegistro">{{ mensajeRegistro }}</div>
+
+        <button type="submit" class="btn-principal" [disabled]="cargandoRegistro">
+          {{ cargandoRegistro ? 'Registrando...' : 'Registrarme' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

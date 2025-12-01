@@ -1,0 +1,74 @@
+<section class="carrito">
+  <h2>Carrito de compras</h2>
+
+  <p *ngIf="cargando">Cargando carrito...</p>
+
+  <!-- mensajes generales del carrito -->
+  <p class="carrito-error" *ngIf="error">{{ error }}</p>
+  <p class="carrito-ok" *ngIf="mensaje">{{ mensaje }}</p>
+
+  <!-- mensajes específicos de la compra -->
+  <p class="carrito-ok" *ngIf="mensajeCompra">{{ mensajeCompra }}</p>
+  <p class="carrito-error" *ngIf="errorCompra">{{ errorCompra }}</p>
+
+  <ng-container *ngIf="!cargando && !error && carrito">
+    <p *ngIf="carrito.items.length === 0">
+      Tu carrito está vacío.
+    </p>
+
+    <div class="carrito-contenido" *ngIf="carrito.items.length > 0">
+      <table class="carrito-tabla">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Precio unitario</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of carrito.items">
+            <td>
+              <div class="carrito-producto">
+                <div>
+                  <div class="nombre">{{ item.producto.nombre }}</div>
+                  <div class="categoria" *ngIf="item.producto.categoria">
+                    {{ item.producto.categoria.nombre }}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>S/ {{ item.precioUnitario | number: '1.2-2' }}</td>
+            <td>
+              <div class="carrito-cantidad">
+                <button type="button" (click)="cambiarCantidad(item, -1)">-</button>
+                <span>{{ item.cantidad }}</span>
+                <button type="button" (click)="cambiarCantidad(item, 1)">+</button>
+              </div>
+            </td>
+            <td>
+              S/
+              {{ (item.cantidad * item.precioUnitario) | number: '1.2-2' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="carrito-resumen">
+        <div class="total">
+          Total:
+          <strong>S/ {{ totalCarrito() | number: '1.2-2' }}</strong>
+        </div>
+
+        <div class="acciones">
+          <button type="button" class="btn-secundario" (click)="vaciar()">
+            Vaciar carrito
+          </button>
+          <button type="button" class="btn-principal" (click)="finalizarCompra()">
+            Finalizar compra
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

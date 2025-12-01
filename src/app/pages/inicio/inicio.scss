@@ -1,0 +1,325 @@
+.inicio-layout {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 1.5rem;
+}
+
+.inicio__categorias {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.inicio__titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+}
+
+.categorias__lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 0.4rem 0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 0.4rem;
+
+    &:hover {
+      background-color: #f3f4f6;
+    }
+  }
+}
+
+.inicio__principal {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.banner-electronica {
+  background: linear-gradient(135deg, #1e40af, #0ea5e9);
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem 1.8rem;
+  display: grid;
+  grid-template-columns: 2fr 1.5fr;
+  gap: 1.5rem;
+}
+
+.banner__texto h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.banner__texto p {
+  font-size: 0.95rem;
+  max-width: 32rem;
+  margin-bottom: 1rem;
+}
+
+.banner__btn {
+  border: none;
+  padding: 0.5rem 1.4rem;
+  border-radius: 999px;
+  background-color: #fbbf24;
+  color: #1f2937;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.inicio__ofertas h2 {
+  margin-bottom: 0.8rem;
+}
+
+//tamaño en los filtros
+
+.ofertas__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+
+.error-msg {
+  color: #b91c1c;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.oferta-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.oferta-card__precio {
+  font-weight: 700;
+  color: #16a34a;
+  font-size: 0.95rem;
+}
+
+.oferta-card__categoria {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 0.35rem;
+}
+
+.oferta-card__descripcion {
+  font-size: 0.9rem;
+}
+
+/* tarjeta de producto con imagen */
+.oferta-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s ease-in-out;
+  max-width: 300px;
+  margin: 0 auto;
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+    border-color: #c7d2fe;
+  }
+}
+
+
+
+.oferta-card__imagen {
+  width: 100%;
+  height: 180px;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.oferta-card__imagen--placeholder {
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+.oferta-card__contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.oferta-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.oferta-card__precio {
+  font-weight: 700;
+  color: #16a34a;
+  font-size: 0.95rem;
+}
+
+.oferta-card__categoria {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.oferta-card__descripcion {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+/* mensaje de error ya lo tenías */
+.error-msg {
+  color: #b91c1c;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Modal (similar al de login) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+
+.modal-contenido {
+  width: 100%;
+  max-width: 720px;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.75rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+  position: relative;
+}
+
+.modal-cerrar {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.9rem;
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* layout del modal de producto */
+.producto-modal__layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.25rem;
+}
+
+.producto-modal__imagen {
+  border-radius: 0.75rem;
+  background-color: #f3f4f6;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.producto-modal__placeholder {
+  padding: 2rem;
+  color: #9ca3af;
+}
+
+.producto-modal__info h2 {
+  margin-bottom: 0.2rem;
+}
+
+.producto-modal__categoria {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.producto-modal__descripcion {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-bottom: 0.7rem;
+}
+
+.producto-modal__precio {
+  font-size: 0.95rem;
+  margin-bottom: 0.7rem;
+}
+
+.producto-modal__acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+
+  label {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    input {
+      width: 70px;
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db;
+      padding: 0.35rem 0.5rem;
+    }
+  }
+}
+
+/* reutilizamos estilos de botones / mensajes */
+.btn-principal {
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1.4rem;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.form-error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
+.form-ok {
+  color: #15803d;
+  font-size: 0.85rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .producto-modal__layout {
+    grid-template-columns: 1fr;
+  }
+}

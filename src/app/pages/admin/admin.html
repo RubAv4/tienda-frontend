@@ -1,0 +1,360 @@
+<!-- src/app/pages/admin/admin.html -->
+<section class="admin-page" *ngIf="!cargando; else cargandoTpl">
+  <header class="admin-header">
+    <h1>Panel de administración</h1>
+  </header>
+
+  <!-- MENSAJES GENERALES -->
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+  <div *ngIf="mensaje" class="alert alert-ok">{{ mensaje }}</div>
+
+  <!-- ===================== VENTAS POR USUARIO ===================== -->
+  <section class="card">
+    <h2>Ventas por usuario</h2>
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Pedidos</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let v of ventasPorUsuario">
+          <td>{{ v.username }}</td>
+          <td>{{ v.pedidos }}</td>
+          <td>S/ {{ v.total | number:'1.2-2' }}</td>
+        </tr>
+        <tr *ngIf="ventasPorUsuario.length === 0">
+          <td colspan="3">No hay ventas registradas.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===================== PEDIDOS RECIENTES ===================== -->
+  <section class="card">
+    <h2>Pedidos recientes</h2>
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Usuario</th>
+          <th>Total</th>
+          <th>Items</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of pedidos">
+          <td>{{ p.id }}</td>
+          <td>{{ p.fecha | date:'short' }}</td>
+          <td>{{ p.usuario?.username }}</td>
+          <td>S/ {{ p.total | number:'1.2-2' }}</td>
+          <td>
+            <ul class="lista-items">
+              <li *ngFor="let it of p.items">
+                {{ it.cantidad }} x {{ it.producto?.nombre }} (S/ {{ it.precioUnitario | number:'1.2-2' }})
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr *ngIf="pedidos.length === 0">
+          <td colspan="5">No hay pedidos registrados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===================== LOGS DEL REPONEDOR ===================== -->
+  <section class="card" *ngIf="logsReponedor.length > 0">
+    <h2>Historial de reposición</h2>
+    <ul class="lista-logs">
+      <li *ngFor="let log of logsReponedor">
+        <div class="log-header">
+          <span class="log-user">{{ log.usuarioReponedor?.username }}</span>
+          <span class="log-fecha">{{ log.fecha | date:'short' }}</span>
+        </div>
+        <div class="log-msg">
+          {{ log.mensaje }}
+          <ng-container *ngIf="log.producto">
+            – Producto: <strong>{{ log.producto.nombre }}</strong>
+          </ng-container>
+          <ng-container *ngIf="log.cantidadAgregada">
+            – Cantidad agregada: <strong>{{ log.cantidadAgregada }}</strong>
+          </ng-container>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ===================== CATEGORÍAS ===================== -->
+  <section class="card">
+    <div class="admin-header" style="margin-bottom: 0.75rem;">
+      <h2>Categorías</h2>
+      <button class="btn btn-primary btn-xs" (click)="abrirModalCategoria()">+ Nueva categoría</button>
+    </div>
+
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Activo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of categorias">
+          <td>{{ c.id }}</td>
+          <td>{{ c.nombre }}</td>
+          <td>{{ c.descripcion }}</td>
+          <td>
+            <span class="badge" [ngClass]="c.activo ? 'badge-ok' : 'badge-off'">
+              {{ c.activo ? 'Sí' : 'No' }}
+            </span>
+          </td>
+          <td>
+            <button
+              class="btn btn-secondary btn-xs"
+              *ngIf="esAdmin"
+              (click)="abrirModalCategoria(c)">
+              ✏️ Editar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="categorias.length === 0">
+          <td colspan="5">No hay categorías registradas.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===================== PRODUCTOS ===================== -->
+  <section class="card">
+    <div class="admin-header" style="margin-bottom: 0.75rem;">
+      <h2>Productos</h2>
+      <button
+        class="btn btn-primary btn-xs"
+        (click)="abrirModalProducto()">
+        + Nuevo producto
+      </button>
+    </div>
+
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Activo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of productos">
+          <td>{{ p.id }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.categoria?.nombre || 'Sin categoría' }}</td>
+          <td>S/ {{ p.precio | number:'1.2-2' }}</td>
+          <td>
+            <div class="stock-cell">
+              <span class="badge-stock">{{ p.stock }}</span>
+              <button
+                class="btn btn-secondary btn-xs"
+                (click)="actualizarStock(p)">
+                Cambiar
+              </button>
+            </div>
+          </td>
+          <td>
+            <button
+              class="estado-btn"
+              [ngClass]="p.activo ? 'activo' : 'inactivo'"
+              (click)="cambiarActivo(p)">
+              {{ p.activo ? 'Sí' : 'No' }}
+            </button>
+          </td>
+          <td>
+            <button
+              class="btn btn-secondary btn-xs"
+              (click)="abrirModalProducto(p)">
+              ✏️ Editar
+            </button>
+
+            <button
+              class="btn btn-danger btn-xs"
+              *ngIf="esAdmin"
+              (click)="eliminarProducto(p)">
+              🗑 Eliminar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="productos.length === 0">
+          <td colspan="7">No hay productos registrados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===================== MODAL CATEGORÍA ===================== -->
+  <div
+    class="modal-overlay"
+    *ngIf="mostrarModalCategoria"
+    (click)="cerrarModalCategoria()">
+
+    <div
+      class="modal-contenido modal-admin"
+      (click)="$event.stopPropagation()">
+
+      <button class="modal-cerrar" type="button" (click)="cerrarModalCategoria()">✕</button>
+
+      <h3 *ngIf="modoCategoria === 'crear'">Nueva categoría</h3>
+      <h3 *ngIf="modoCategoria === 'editar'">Editar categoría</h3>
+
+      <form (ngSubmit)="crearCategoria()">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevaCategoria.nombre"
+            name="catNombre"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea
+            rows="3"
+            [(ngModel)]="nuevaCategoria.descripcion"
+            name="catDescripcion">
+          </textarea>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <input
+              type="checkbox"
+              [(ngModel)]="nuevaCategoria.activo"
+              name="catActivo" />
+            Activa
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">
+            {{ modoCategoria === 'crear' ? 'Crear' : 'Guardar cambios' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cerrarModalCategoria()">
+            Cancelar
+          </button>
+        </div>
+
+        <div class="form-error" *ngIf="errorCategoria">{{ errorCategoria }}</div>
+        <div class="form-ok" *ngIf="mensajeCategoria">{{ mensajeCategoria }}</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL PRODUCTO ===================== -->
+  <div
+    class="modal-overlay"
+    *ngIf="mostrarModalProducto"
+    (click)="cerrarModalProducto()">
+
+    <div
+      class="modal-contenido modal-admin"
+      (click)="$event.stopPropagation()">
+
+      <button class="modal-cerrar" type="button" (click)="cerrarModalProducto()">✕</button>
+
+      <h3 *ngIf="modoProducto === 'crear'">Nuevo producto</h3>
+      <h3 *ngIf="modoProducto === 'editar'">Editar producto</h3>
+
+      <form (ngSubmit)="crearProducto()">
+        <div class="form-group">
+          <label>Categoría</label>
+          <select
+            [(ngModel)]="nuevoProducto.categoriaId"
+            name="prodCategoria"
+            required>
+            <option [ngValue]="0">Seleccione...</option>
+            <option *ngFor="let c of categorias" [ngValue]="c.id">
+              {{ c.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Nombre</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoProducto.nombre"
+            name="prodNombre"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea
+            rows="3"
+            [(ngModel)]="nuevoProducto.descripcion"
+            name="prodDescripcion">
+          </textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              [(ngModel)]="nuevoProducto.precio"
+              name="prodPrecio"
+              required />
+          </div>
+
+          <div class="form-group">
+            <label>Stock</label>
+            <input
+              type="number"
+              min="0"
+              [(ngModel)]="nuevoProducto.stock"
+              name="prodStock"
+              required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Imagen URL</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoProducto.imagenUrl"
+            name="prodImagenUrl" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">
+            {{ modoProducto === 'crear' ? 'Crear' : 'Guardar cambios' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cerrarModalProducto()">
+            Cancelar
+          </button>
+        </div>
+
+        <div class="form-error" *ngIf="errorProducto">{{ errorProducto }}</div>
+        <div class="form-ok" *ngIf="mensajeProducto">{{ mensajeProducto }}</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<ng-template #cargandoTpl>
+  <div class="admin-loading">
+    Cargando panel de administración...
+  </div>
+</ng-template>

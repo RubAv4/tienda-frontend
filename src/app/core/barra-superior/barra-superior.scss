@@ -1,0 +1,165 @@
+/* Barra blanca fija arriba */
+.navbar {
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Contenedor centrado tipo “layout” */
+.navbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 3 columnas: izquierda, centro, derecha */
+.navbar-left {
+  flex: 0 0 auto;
+}
+
+.navbar-center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Logo */
+.logo {
+  font-weight: 700;
+  font-size: 20px;
+  text-decoration: none;
+  color: #222;
+  white-space: nowrap;
+}
+
+/* Select de categorías */
+.categoria-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* Buscador */
+.search-box {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+}
+
+.search-box input {
+  flex: 1 1 auto;
+  padding: 7px 10px;
+  border: 1px solid #d0d0d0;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  font-size: 14px;
+}
+
+.search-box button {
+  flex: 0 0 auto;
+  padding: 7px 16px;
+  border-radius: 0 6px 6px 0;
+  border: none;
+  background: #1677ff;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.search-box button:hover {
+  background: #135ed1;
+}
+
+/* Botones de usuario (derecha) */
+.link-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: #1677ff;
+}
+
+.link-btn.primary {
+  border-radius: 16px;
+  border: 1px solid #1677ff;
+  padding-inline: 14px;
+  background: #e6f0ff;
+}
+
+.link-btn.primary:hover {
+  background: #d5e4ff;
+}
+
+.link-btn.danger {
+  color: #cc0000;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+/* Texto usuario */
+.username {
+  font-size: 14px;
+  color: #555;
+  white-space: nowrap;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .navbar-inner {
+    flex-wrap: wrap;
+  }
+
+  .navbar-left {
+    flex-basis: 100%;
+  }
+
+  .navbar-center {
+    flex-basis: 100%;
+    order: 3;
+  }
+
+  .navbar-right {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 600px) {
+  .categoria-select {
+    display: none; /* puedes cambiarlo si quieres mostrarla */
+  }
+
+  .search-box input {
+    font-size: 13px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+}

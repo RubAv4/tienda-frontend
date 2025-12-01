@@ -1,0 +1,82 @@
+<!-- src/app/core/barra-superior/barra-superior.html -->
+<header class="navbar">
+  <div class="navbar-inner">
+
+    <!-- IZQUIERDA: LOGO -->
+    <div class="navbar-left">
+      <a routerLink="/" class="logo">Electrónica-Tienda</a>
+    </div>
+
+    <!-- CENTRO: CATEGORÍA + BUSCADOR -->
+    <div class="navbar-center">
+      <select
+        class="categoria-select"
+        [(ngModel)]="categoriaSeleccionada"
+        (ngModelChange)="onCategoriaChange($event)">
+        <option [ngValue]="null">Todas las categorías</option>
+        <option *ngFor="let cat of categorias" [ngValue]="cat">
+          {{ cat }}
+        </option>
+      </select>
+
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Buscar componentes electrónicos..."
+          [(ngModel)]="textoBusqueda"
+          (ngModelChange)="onTextoChange($event)" />
+        <button type="button" (click)="buscar()">Buscar</button>
+      </div>
+    </div>
+
+    <!-- DERECHA: USUARIO / LOGIN -->
+    <div class="navbar-right">
+
+      <!-- Invitado -->
+      <ng-container *ngIf="!estaAutenticado(); else usuarioLogueado">
+        <button type="button" class="link-btn primary" (click)="irAlLogin()">
+          Iniciar sesión
+        </button>
+      </ng-container>
+
+      <!-- Logueado -->
+      <ng-template #usuarioLogueado>
+        <span class="username">
+          Hola, <strong>{{ nombreUsuario }}</strong>
+        </span>
+
+        <button
+          type="button"
+          class="link-btn"
+          *ngIf="esCliente"
+          (click)="irAlCarrito()">
+          🛒 Pedidos / Carrito
+        </button>
+
+        <button
+          type="button"
+          class="link-btn"
+          *ngIf="esAdmin"
+          (click)="irAlAdmin()">
+          🔧 Admin
+        </button>
+
+        <button
+          type="button"
+          class="link-btn"
+          *ngIf="esReponedor && !esAdmin"
+          (click)="irAlAdmin()">
+          📦 Inventario
+        </button>
+
+        <button
+          type="button"
+          class="link-btn danger"
+          (click)="cerrarSesion()">
+          Salir
+        </button>
+      </ng-template>
+
+    </div>
+  </div>
+</header>
